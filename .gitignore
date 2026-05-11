@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Streamlit
+.streamlit/
+
+# Firebase credentials (VERY IMPORTANT)
+firebase-key.json
+serviceAccountKey.json
+test_firebase.py
+
+# API keys / secrets
+.env
+*.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# Model/cache files
+models/
+*.bin
+*.pt
+*.h5
+
+# HuggingFace cache
+.cache/
+huggingface/
