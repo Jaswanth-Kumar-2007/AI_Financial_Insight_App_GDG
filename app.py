@@ -119,10 +119,10 @@ if page == "Dashboard":
         stock_info, _ = get_stock_data(symbol)
 
         st.write("STOCK INFO:", stock_info)
-        
-        hist_data = get_historical_data(symbol)
 
-        if stock_info is None or hist_data is None or hist_data.empty:
+        hist_data = get_historical_data(symbol)
+        
+        if stock_info is None or hist_data is None or not hasattr(hist_data, "empty") or hist_data.empty:
             st.error("No stock data found (invalid or unlisted company)")
             st.stop()
 
