@@ -111,23 +111,31 @@ if page == "Dashboard":
     st.write("SYMBOL AFTER CONVERSION:", symbol)
     st.session_state["symbol"] = symbol
 
-    # ---------------- ANALYZE ----------------
+        # ---------------- ANALYZE ----------------
     if st.button("Analyze Stock"):
 
         st.write("CALLING FINNHUB WITH:", symbol)
 
+        # ---------------- STOCK INFO ----------------
         stock_info, _ = get_stock_data(symbol)
 
         st.write("STOCK INFO:", stock_info)
 
+        # ---------------- HISTORICAL DATA ----------------
         hist_data = get_historical_data(symbol)
 
         st.write("HIST INFO:", hist_data)
 
-        if stock_info is None or hist_data is None or not hasattr(hist_data, "empty") or hist_data.empty:
-            st.error("No stock data found (invalid or unlisted company)")
+        # ---------------- VALIDATION (FIXED) ----------------
+        if stock_info is None:
+            st.error("Stock info not found")
             st.stop()
 
+        if hist_data is None or hist_data.empty:
+            st.error("Historical data not available")
+            st.stop()
+
+        # ---------------- INDICATORS ----------------
         hist_data = add_indicators(hist_data)
 
         # store in session
@@ -148,10 +156,13 @@ if page == "Dashboard":
         st.subheader("Candlestick Chart")
         st.plotly_chart(create_candlestick_chart(hist_data), use_container_width=True)
 
-        # ---------------- INDICATORS (SAFE) ----------------
+        # ---------------- TECHNICAL INDICATORS ----------------
         st.subheader("Technical Indicators")
 
-        try:
+        required_cols = ["RSI", "MACD", "SMA", "EMA"]
+
+        if all(col in hist_data.columns for col in required_cols):
+
             latest_rsi = hist_data["RSI"].dropna().iloc[-1]
             latest_macd = hist_data["MACD"].dropna().iloc[-1]
             latest_sma = hist_data["SMA"].dropna().iloc[-1]
@@ -164,7 +175,7 @@ if page == "Dashboard":
             c3.metric("SMA", round(latest_sma, 2))
             c4.metric("EMA", round(latest_ema, 2))
 
-        except:
+        else:
             st.warning("Indicators not fully available for this stock")
 
         # ---------------- NEWS ----------------

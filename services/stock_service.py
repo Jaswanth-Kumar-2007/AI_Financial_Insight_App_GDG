@@ -1,13 +1,13 @@
 import requests
 import streamlit as st
-import time
 import pandas as pd
+import yfinance as yf
 
 API_KEY = st.secrets["FINNHUB_API_KEY"]
 
 
 # -----------------------------
-# GET CURRENT STOCK DATA
+# CURRENT STOCK DATA (FINNHUB)
 # -----------------------------
 def get_stock_data(symbol):
 
@@ -15,11 +15,12 @@ def get_stock_data(symbol):
         quote_url = f"https://finnhub.io/api/v1/quote?symbol={symbol}&token={API_KEY}"
         profile_url = f"https://finnhub.io/api/v1/stock/profile2?symbol={symbol}&token={API_KEY}"
 
-        quote = requests.get(quote_url).json()
-        profile = requests.get(profile_url).json()
+        quote = requests.get(quote_url, timeout=10).json()
+        profile = requests.get(profile_url, timeout=10).json()
 
-        print("QUOTE RESPONSE:", quote)
-        print("PROFILE RESPONSE:", profile)
+        # safety check
+        if not quote or quote.get("c") is None:
+            return None, None
 
         stock_info = {
             "currentPrice": quote.get("c"),
@@ -31,54 +32,28 @@ def get_stock_data(symbol):
             "name": profile.get("name", symbol)
         }
 
-        return stock_info, None
+        return stock_info, True
 
     except Exception as e:
         print("Stock data error:", e)
         return None, None
 
 
+# -----------------------------
+# HISTORICAL DATA (YFINANCE)
+# -----------------------------
 def get_historical_data(symbol):
 
     try:
-        # last 6 months (better than 30 days for charts)
-        to_time = int(time.time())
-        from_time = to_time - (60 * 60 * 24 * 180)
+        ticker = yf.Ticker(symbol)
 
-        url = "https://finnhub.io/api/v1/stock/candle"
+        df = ticker.history(period="6mo")
 
-        params = {
-            "symbol": symbol,
-            "resolution": "D",
-            "from": from_time,
-            "to": to_time,
-            "token": API_KEY
-        }
-
-        response = requests.get(url, params=params, timeout=10).json()
-
-        # ---------------- DEBUG (optional) ----------------
-        print("HIST RESPONSE:", response)
-
-        # Finnhub success check
-        if response.get("s") != "ok":
+        if df is None or df.empty:
             return pd.DataFrame()
 
-        # ---------------- CREATE DATAFRAME ----------------
-        df = pd.DataFrame({
-            "Open": response.get("o", []),
-            "High": response.get("h", []),
-            "Low": response.get("l", []),
-            "Close": response.get("c", []),
-            "Volume": response.get("v", [])
-        })
-
-        # safety check
-        if df.empty:
-            return pd.DataFrame()
-
-        return df
+        return df[["Open", "High", "Low", "Close", "Volume"]]
 
     except Exception as e:
-        print("Historical data error:", e)
+        print("YFinance error:", e)
         return pd.DataFrame()
