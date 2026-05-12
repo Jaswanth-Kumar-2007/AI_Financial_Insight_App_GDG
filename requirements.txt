@@ -12,3 +12,4 @@ fastapi
 uvicorn
 ta
 streamlit-autorefresh
+pyrebase
