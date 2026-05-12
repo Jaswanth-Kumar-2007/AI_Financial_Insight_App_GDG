@@ -27,7 +27,7 @@ from firebase.watchlist_service import add_to_watchlist, get_watchlist
 
 # ---------------- CONFIG ----------------
 st.set_page_config(page_title="AI Financial Assistant", layout="wide")
-st_autorefresh(interval=60000, key="refresh")
+st_autorefresh(interval=180000, key="refresh")
 
 st.sidebar.title("AI Finance Dashboard")
 
@@ -105,8 +105,10 @@ if page == "Dashboard":
     symbol = get_stock_symbol(user_input)
     st.session_state["symbol"] = symbol
 
+    st.session_state["stock_data"] = (stock_info, hist_data)
+
     # ---------------- ANALYZE ----------------
-    if st.button("Analyze Stock"):
+    if st.button("Analyze Stock") or "stock_data" in st.session_state:
 
         stock_info, hist_data = get_stock_data(symbol)
 
@@ -172,7 +174,7 @@ if page == "Dashboard":
 
         else:
             sentiment = {"positive": 0, "negative": 0, "neutral": 0}
-            st.info("No news available")
+            st.fast_info("No news available")
 
         # ---------------- BUY / SELL ----------------
         st.subheader("Market Suggestion")
