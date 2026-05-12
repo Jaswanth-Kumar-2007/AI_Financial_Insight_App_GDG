@@ -108,7 +108,8 @@ if page == "Dashboard":
     # ---------------- ANALYZE ----------------
     if st.button("Analyze Stock"):
 
-        stock_info, hist_data = get_stock_data(symbol)
+        stock_info, _ = get_stock_data(symbol)
+        hist_data = get_historical_data(symbol)
 
         if stock_info is None or hist_data is None or hist_data.empty:
             st.error("No stock data found (invalid or unlisted company)")
