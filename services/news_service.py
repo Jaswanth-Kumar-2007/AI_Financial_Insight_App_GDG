@@ -1,10 +1,7 @@
+import streamlit as st
 import requests
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
-
-NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+NEWS_API_KEY = st.secrets["NEWS_API_KEY"]
 
 
 def get_stock_news(symbol):
