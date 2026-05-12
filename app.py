@@ -115,8 +115,11 @@ if page == "Dashboard":
     if st.button("Analyze Stock"):
 
         st.write("CALLING FINNHUB WITH:", symbol)
-        
+
         stock_info, _ = get_stock_data(symbol)
+
+        st.write("STOCK INFO:", stock_info)
+        
         hist_data = get_historical_data(symbol)
 
         if stock_info is None or hist_data is None or hist_data.empty:
