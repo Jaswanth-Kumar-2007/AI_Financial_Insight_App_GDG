@@ -2,6 +2,8 @@ import requests
 import streamlit as st
 import time
 import pandas as pd
+import yfinance as yf
+
 
 API_KEY = st.secrets["FINNHUB_API_KEY"]
 
@@ -31,9 +33,22 @@ def get_history(symbol):
 # -----------------------------
 # COMPARE STOCKS
 # -----------------------------
+
+
 def compare_stocks(stock1, stock2):
 
-    data1 = get_history(stock1)
-    data2 = get_history(stock2)
+    try:
+        data1 = yf.Ticker(stock1).history(period="6mo")
+        data2 = yf.Ticker(stock2).history(period="6mo")
 
-    return data1, data2
+        if data1 is None or data1.empty:
+            data1 = pd.DataFrame()
+
+        if data2 is None or data2.empty:
+            data2 = pd.DataFrame()
+
+        return data1, data2
+
+    except Exception as e:
+        print("Compare error:", e)
+        return pd.DataFrame(), pd.DataFrame()
