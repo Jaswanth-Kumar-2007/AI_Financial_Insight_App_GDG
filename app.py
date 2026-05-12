@@ -41,9 +41,10 @@ if "user" not in st.session_state:
     email = st.sidebar.text_input("Email", key="email")
     password = st.sidebar.text_input("Password", type="password", key="password")
 
+    # ---------------- SIGNUP ----------------
     if auth_mode == "Signup":
 
-        username = st.sidebar.text_input("Username", key="username")
+        username_input = st.sidebar.text_input("Username", key="signup_username")
 
         if st.sidebar.button("Create Account"):
 
@@ -51,12 +52,13 @@ if "user" not in st.session_state:
 
             if user:
                 st.session_state["user"] = user
-                st.session_state["username"] = username
+                st.session_state["username"] = username_input   # ✅ FIXED
                 st.success("Account created")
                 st.rerun()
             else:
                 st.error("Signup failed")
 
+    # ---------------- LOGIN ----------------
     else:
 
         if st.sidebar.button("Login"):
@@ -65,7 +67,7 @@ if "user" not in st.session_state:
 
             if user:
                 st.session_state["user"] = user
-                st.session_state["username"] = "user"
+                st.session_state["username"] = user["email"].split("@")[0]  # ✅ safe default
                 st.success("Login successful")
                 st.rerun()
             else:
