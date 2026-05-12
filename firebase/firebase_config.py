@@ -11,6 +11,11 @@ if not firebase_admin._apps:
         "private_key": st.secrets["FIREBASE_PRIVATE_KEY"],
         "client_email": st.secrets["FIREBASE_CLIENT_EMAIL"],
         "client_id": st.secrets["FIREBASE_CLIENT_ID"],
+        "auth_uri": st.secrets["FIREBASE_AUTH_URI"],
+        "token_uri": st.secrets["FIREBASE_TOKEN_URI"],
+        "auth_provider_x509_cert_url": st.secrets["FIREBASE_AUTH_PROVIDER"],
+        "client_x509_cert_url": st.secrets["FIREBASE_CLIENT_CERT"],
+        "universe_domain": "googleapis.com"
     })
 
     firebase_admin.initialize_app(cred)
