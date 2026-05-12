@@ -14,10 +14,9 @@ Password:
 
 ```bash
 admin@123
+```
 
 ---
-
-```
 
 An AI-powered stock market analysis web app built using **Streamlit**, **Firebase**, and **Google Gemini API**.  
 It helps users analyze stocks, view technical indicators, read market sentiment, and get AI-driven insights in real time.
@@ -175,21 +174,37 @@ TSLA/
 
 ## 📁 Project Structure
 
-AI-Financial-Insight-Assistant/
-│
-├── app.py
-├── firebase/
-│ ├── firebase_config.py
-│ ├── auth_service.py
-│ └── watchlist_service.py
-│
-├── services/
-├── ai/
-├── charts/
-├── indicators/
-├── requirements.txt
-├── .gitignore
-└── .streamlit/secrets.toml
+```bash
+AI-Financial-Insight-Assistant
+├── 📁 ai
+│   ├── 🐍 gemini_analysis.py
+│   └── 🐍 symbol_ai.py
+├── 📁 assets
+│   ├── 🖼️ compare.png
+│   ├── 🖼️ dashboard.png
+│   ├── 🖼️ portfolio.png
+│   ├── 🎨 style.css
+│   └── 🖼️ watchlist.png
+├── 📁 charts
+│   └── 🐍 chart_builder.py
+├── 📁 firebase
+│   ├── 🐍 auth_service.py
+│   ├── 🐍 firebase_config.py
+│   └── 🐍 watchlist_service.py
+├── 📁 indicators
+│   └── 🐍 indicators.py
+├── 📁 services
+│   ├── 🐍 compare_service.py
+│   ├── 🐍 export_service.py
+│   ├── 🐍 news_service.py
+│   ├── 🐍 portfolio_service.py
+│   ├── 🐍 sentiment_service.py
+│   └── 🐍 stock_service.py
+├── ⚙️ .gitignore
+├── 📝 Readme.MD
+├── 🐍 app.py
+└── 📄 requirements.txt
+```
 
 ---
 
