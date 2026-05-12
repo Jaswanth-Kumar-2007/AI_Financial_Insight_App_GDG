@@ -18,7 +18,7 @@ from services.export_service import convert_to_csv
 
 from services.portfolio_service import add_stock, get_portfolio
 
-from services.stock_service import get_stock_data
+from services.stock_service import get_stock_data, get_historical_data
 
 from firebase.auth_service import signup_user, login_user
 
