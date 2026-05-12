@@ -3,7 +3,7 @@ import streamlit as st
 
 
 # ---------------- SIGNUP ----------------
-def signup_user(email, password):
+def signup_user(email, password, username=None):
 
     try:
         user = auth.create_user(
@@ -13,7 +13,8 @@ def signup_user(email, password):
 
         return {
             "uid": user.uid,
-            "email": user.email
+            "email": user.email,
+            "username": username
         }
 
     except Exception as e:
