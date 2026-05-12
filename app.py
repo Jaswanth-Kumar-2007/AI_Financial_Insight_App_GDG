@@ -102,7 +102,8 @@ if page == "Dashboard":
     # ---------------- INPUT ----------------
     user_input = st.text_input("Enter Company or Symbol", "Apple")
 
-    symbol = get_stock_symbol(user_input)
+    #symbol = get_stock_symbol(user_input)
+    symbol = user_input
     st.session_state["symbol"] = symbol
 
     # ---------------- ANALYZE ----------------
