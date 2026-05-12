@@ -105,10 +105,8 @@ if page == "Dashboard":
     symbol = get_stock_symbol(user_input)
     st.session_state["symbol"] = symbol
 
-    st.session_state["stock_data"] = (stock_info, hist_data)
-
     # ---------------- ANALYZE ----------------
-    if st.button("Analyze Stock") or "stock_data" in st.session_state:
+    if st.button("Analyze Stock"):
 
         stock_info, hist_data = get_stock_data(symbol)
 
