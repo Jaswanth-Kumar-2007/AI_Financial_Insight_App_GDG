@@ -38,32 +38,47 @@ def get_stock_data(symbol):
         return None, None
 
 
-# -----------------------------
-# GET HISTORICAL DATA (FOR CHARTS)
-# -----------------------------
 def get_historical_data(symbol):
 
     try:
+        # last 6 months (better than 30 days for charts)
         to_time = int(time.time())
-        from_time = to_time - (60 * 60 * 24 * 30)  # last 30 days
+        from_time = to_time - (60 * 60 * 24 * 180)
 
-        url = f"https://finnhub.io/api/v1/stock/candle?symbol={symbol}&resolution=D&from={from_time}&to={to_time}&token={API_KEY}"
+        url = "https://finnhub.io/api/v1/stock/candle"
 
-        data = requests.get(url).json()
+        params = {
+            "symbol": symbol,
+            "resolution": "D",
+            "from": from_time,
+            "to": to_time,
+            "token": API_KEY
+        }
 
-        if data.get("s") != "ok":
-            return None
+        response = requests.get(url, params=params, timeout=10).json()
 
+        # ---------------- DEBUG (optional) ----------------
+        print("HIST RESPONSE:", response)
+
+        # Finnhub success check
+        if response.get("s") != "ok":
+            return pd.DataFrame()
+
+        # ---------------- CREATE DATAFRAME ----------------
         df = pd.DataFrame({
-            "Open": data["o"],
-            "High": data["h"],
-            "Low": data["l"],
-            "Close": data["c"],
-            "Volume": data["v"]
+            "Open": response.get("o", []),
+            "High": response.get("h", []),
+            "Low": response.get("l", []),
+            "Close": response.get("c", []),
+            "Volume": response.get("v", [])
         })
+
+        # safety check
+        if df.empty:
+            return pd.DataFrame()
 
         return df
 
     except Exception as e:
         print("Historical data error:", e)
-        return None
+        return pd.DataFrame()
