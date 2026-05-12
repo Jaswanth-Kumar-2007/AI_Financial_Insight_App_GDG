@@ -84,7 +84,7 @@ if st.sidebar.button("Logout"):
 
 
 # ---------------- USER INFO ----------------
-user_id = st.session_state["user"]["localId"]
+user_id = st.session_state["user"]["uid"]
 
 st.sidebar.success(f"Logged in as {st.session_state.get('username')}")
 
