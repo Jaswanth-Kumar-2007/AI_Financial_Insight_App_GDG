@@ -18,6 +18,9 @@ def get_stock_data(symbol):
         quote = requests.get(quote_url).json()
         profile = requests.get(profile_url).json()
 
+        print("QUOTE RESPONSE:", quote)
+        print("PROFILE RESPONSE:", profile)
+
         stock_info = {
             "currentPrice": quote.get("c"),
             "high": quote.get("h"),

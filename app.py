@@ -102,13 +102,20 @@ if page == "Dashboard":
     # ---------------- INPUT ----------------
     user_input = st.text_input("Enter Company or Symbol", "Apple")
 
-    #symbol = get_stock_symbol(user_input)
-    symbol = user_input
+    st.write("INPUT:", user_input)
+
+    symbol = get_stock_symbol(user_input)
+
+    symbol = get_stock_symbol(user_input)
+
+    st.write("SYMBOL AFTER CONVERSION:", symbol)
     st.session_state["symbol"] = symbol
 
     # ---------------- ANALYZE ----------------
     if st.button("Analyze Stock"):
 
+        st.write("CALLING FINNHUB WITH:", symbol)
+        
         stock_info, _ = get_stock_data(symbol)
         hist_data = get_historical_data(symbol)
 
