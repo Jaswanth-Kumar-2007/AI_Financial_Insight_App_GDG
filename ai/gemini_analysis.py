@@ -1,12 +1,7 @@
+from google import genai
 import streamlit as st
-import google.generativeai as genai
 
-GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
-
-genai.configure(api_key=GEMINI_API_KEY)
-
-model = genai.GenerativeModel("gemini-3.1-flash-lite")
-
+client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
 def generate_ai_analysis(symbol, rsi, macd, sentiment):
 
@@ -65,7 +60,10 @@ def generate_ai_analysis(symbol, rsi, macd, sentiment):
     """
     try:
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model="gemini-3.1-flash-lite",
+            contents=prompt
+        )
 
         return response.text
 
@@ -82,3 +80,5 @@ def generate_ai_analysis(symbol, rsi, macd, sentiment):
         Error:
         {e}
         """
+
+    

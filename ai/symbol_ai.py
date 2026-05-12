@@ -1,24 +1,19 @@
-import google.generativeai as genai
+from google import genai
 import os
+import streamlit as st
 
-genai.configure(
-    api_key=os.getenv("GEMINI_API_KEY")
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY") or st.secrets["GEMINI_API_KEY"]
 )
-
-model = genai.GenerativeModel("gemini-3.1-flash-lite")
-
 
 def get_stock_symbol(user_input):
 
-    # Fast local mappings first
     local_symbols = {
-
         "apple": "AAPL",
         "tesla": "TSLA",
         "google": "GOOGL",
         "amazon": "AMZN",
         "microsoft": "MSFT",
-
         "tcs": "TCS.NS",
         "infosys": "INFY.NS",
         "infy": "INFY.NS",
@@ -27,55 +22,37 @@ def get_stock_symbol(user_input):
 
     text = user_input.strip().lower()
 
-    # Local mapping
+    # 1. Local mapping (fastest)
     if text in local_symbols:
-
         return local_symbols[text]
 
-    # If already looks like stock symbol
+    # 2. If already symbol-like
     if len(text) <= 10 and " " not in text:
-
-        if text in ["tcs", "infy", "reliance"]:
-            return text.upper() + ".NS"
-
         return text.upper()
 
-    # Gemini fallback
+    # 3. Gemini fallback
     prompt = f"""
-    Convert this company name into ONLY a Yahoo Finance stock symbol.
+Convert this company name into ONLY a Yahoo Finance stock symbol.
 
-    Rules:
-    - Return ONLY symbol
-    - No explanation
-    - No sentences
-    - Indian stocks end with .NS
-    - If invalid return INVALID
+Rules:
+- Return ONLY symbol
+- No explanation
+- Indian stocks end with .NS
+- If invalid return INVALID
 
-    Example:
-    Apple -> AAPL
-    TCS -> TCS.NS
-
-    Input:
-    {user_input}
-    """
+Input:
+{user_input}
+"""
 
     try:
+        response = client.models.generate_content(
+            model="gemini-3.1-flash-lite",
+            contents=prompt
+        )
 
-        response = model.generate_content(prompt)
-
-        symbol = response.text.strip()
-
-        # Remove spaces/newlines
-        symbol = symbol.split()[0]
-
-        symbol = symbol.replace("\n", "")
-
-        symbol = symbol.upper()
-
-        return symbol
+        symbol = response.text.strip().split()[0].replace("\n", "")
+        return symbol.upper()
 
     except Exception as e:
-
         print(e)
-
         return "INVALID"

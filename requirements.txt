@@ -4,9 +4,8 @@ numpy
 yfinance
 plotly
 requests
-google-generativeai
+google-genai
 firebase-admin
-python-dotenv
 textblob
 fastapi
 uvicorn
